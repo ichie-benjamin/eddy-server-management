@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Http\Resources;
 use App\Models;
+
 use Illuminate\Contracts\Console\Kernel as ConsoleKernel;
 use Illuminate\Contracts\Http\Kernel as HttpKernel;
 use Illuminate\Database\Eloquent\Model;
@@ -44,6 +45,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        if($this->app->environment('production')) {
+            URL::forceScheme('https');
+        }
+
         $this->enableSafetyMechanisms();
         $this->setSpladeDefaults();
 
