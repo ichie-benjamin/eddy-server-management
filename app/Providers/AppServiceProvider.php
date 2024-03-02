@@ -24,6 +24,7 @@ use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\GithubProvider;
 use Money\Currencies\ISOCurrencies;
 use Money\Formatter\IntlMoneyFormatter;
+use Opcodes\LogViewer\Facades\LogViewer;
 use ProtoneMedia\LaravelXssProtection\Middleware\XssCleanInput;
 use ProtoneMedia\Splade\Components\Form\Select;
 use ProtoneMedia\Splade\Facades\Splade;
@@ -48,6 +49,11 @@ class AppServiceProvider extends ServiceProvider
         if($this->app->environment('production')) {
             URL::forceScheme('https');
         }
+
+
+        LogViewer::auth(function ($request) {
+            return  $request->user() && in_array($request->user()->email, config('eddy.view_horizon_with_emails'));
+        });
 
         $this->enableSafetyMechanisms();
         $this->setSpladeDefaults();
